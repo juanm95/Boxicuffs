@@ -11,6 +11,19 @@ public class FollowPlayer : MonoBehaviour {
 	public float CameraHeightOffGround;
 	public float CameraDistanceFromPlayer;
 	public float smooth;
+
+	private AudioSource source;
+
+	public AudioClip backgroundMusic;
+
+	void Awake() {
+
+		source = GetComponent<AudioSource> ();
+		source.volume = 0.4F;
+		source.Play ();
+
+	}
+
 	// Use this for initialization
 	void Start () {
 		follow = player.transform;
