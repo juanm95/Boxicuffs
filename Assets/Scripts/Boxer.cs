@@ -32,6 +32,7 @@ public class Boxer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Debug.Log (rb.velocity);
 		hitboxRemaining -= Time.deltaTime;
 		if (Input.GetKeyDown(rightButton))
 		{
@@ -70,14 +71,16 @@ public class Boxer : MonoBehaviour {
 		} else if (collision.gameObject.name == "JumpPad") {
 			jumped = false;
 			timeSlow = true;
-		} else if (collision.gameObject.name.StartsWith("Boxer") && hitboxRemaining > 0) {
+		} else if (collision.gameObject.name.StartsWith ("Boxer") && hitboxRemaining > 0) {
 			Boxer opponent = collision.gameObject.GetComponent<Boxer> ();
 //			Debug.Log (opponent.damage);
 			opponent.hitboxRemaining = 0;
-			collision.rigidbody.AddForce (rb.velocity * 50);
+			collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
 //			opponent.damage += 5;
 			rb.velocity = new Vector3 (0, 0, 0);
-
+		} else if (collision.gameObject.name.StartsWith ("Rope")) {
+			Debug.Log ("Hit that rope");
+			rb.AddForce (collision.relativeVelocity * 25);
 		}
 	}
 }
