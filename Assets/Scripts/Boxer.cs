@@ -20,6 +20,8 @@ public class Boxer : MonoBehaviour {
 	private int killDepth = -50;
 	private ResetMatch resetMatch;
 	public string playerName;
+	public float hitboxRemaining = 0;
+//	public float damage = 1;
 
 	// Use this for initialization
 	void Start () {
@@ -30,17 +32,20 @@ public class Boxer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		hitboxRemaining -= Time.deltaTime;
 		if (Input.GetKeyDown(rightButton))
 		{
 			rb.AddForce (boxer.transform.forward * strength);
 			rb.AddTorque (boxer.transform.up * turnStrength);
 			rb.AddTorque (boxer.transform.right * -strength);
+			hitboxRemaining = .5f;
 		}
 		if (Input.GetKeyDown(leftButton))
 		{
 			rb.AddForce (boxer.transform.forward * strength);
 			rb.AddTorque (boxer.transform.up * -turnStrength);
 			rb.AddTorque (boxer.transform.right * -strength);
+			hitboxRemaining = .5f;
 		}
 		if (Input.GetKeyDown(backButton))
 		{
@@ -56,17 +61,23 @@ public class Boxer : MonoBehaviour {
 			resetMatch.winner = playerName;
 			SceneManager.LoadScene ("PlayerWins");
 		}
-		Debug.Log (transform.position.y);
 	}
 
 	void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.name == "PlayField") {
 			jumped = false;
 			timeSlow = false;
-		}
-		if (collision.gameObject.name == "JumpPad") {
+		} else if (collision.gameObject.name == "JumpPad") {
 			jumped = false;
 			timeSlow = true;
+		} else if (collision.gameObject.name.StartsWith("Boxer") && hitboxRemaining > 0) {
+			Boxer opponent = collision.gameObject.GetComponent<Boxer> ();
+//			Debug.Log (opponent.damage);
+			opponent.hitboxRemaining = 0;
+			collision.rigidbody.AddForce (rb.velocity * 50);
+//			opponent.damage += 5;
+			rb.velocity = new Vector3 (0, 0, 0);
+
 		}
 	}
 }
