@@ -23,6 +23,18 @@ public class Boxer : MonoBehaviour {
 	public float hitboxRemaining = 0;
 //	public float damage = 1;
 
+	public AudioClip moveLSound;
+	public AudioClip moveRSound;
+	public AudioClip hitSound;
+
+	private AudioSource source;
+
+	void Awake() {
+
+		source = GetComponent<AudioSource> ();
+
+	}
+
 	// Use this for initialization
 	void Start () {
 		boxer = this.gameObject;
@@ -36,6 +48,7 @@ public class Boxer : MonoBehaviour {
 		hitboxRemaining -= Time.deltaTime;
 		if (Input.GetKeyDown(rightButton))
 		{
+			source.PlayOneShot (moveRSound, 1F); // sound effect
 			rb.AddForce (boxer.transform.forward * strength);
 			rb.AddTorque (boxer.transform.up * turnStrength);
 			rb.AddTorque (boxer.transform.right * -strength);
@@ -43,6 +56,7 @@ public class Boxer : MonoBehaviour {
 		}
 		if (Input.GetKeyDown(leftButton))
 		{
+			source.PlayOneShot (moveLSound, 1F); // sound effect
 			rb.AddForce (boxer.transform.forward * strength);
 			rb.AddTorque (boxer.transform.up * -turnStrength);
 			rb.AddTorque (boxer.transform.right * -strength);
@@ -76,6 +90,7 @@ public class Boxer : MonoBehaviour {
 //			Debug.Log (opponent.damage);
 			opponent.hitboxRemaining = 0;
 			collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
+			source.PlayOneShot (hitSound, 1F); // sound effect
 //			opponent.damage += 5;
 			rb.velocity = new Vector3 (0, 0, 0);
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
