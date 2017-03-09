@@ -5,6 +5,7 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour {
 
 	public GameObject player;
+	public GameObject opponent;
 	public Rigidbody rb;
 	private Vector3 offset;
 	private Transform follow;
@@ -27,9 +28,9 @@ public class FollowPlayer : MonoBehaviour {
 //		Vector3 targetPosition = - CameraDistanceFromPlayer * rb.velocity.normalized;
 //		targetPosition.y = CameraHeightOffGround;
 //		Debug.Log (targetPosition);
-		Vector3 targetPosition = follow.position + followUp * CameraHeightOffGround - follow.forward * CameraDistanceFromPlayer;
+		Vector3 targetPosition = follow.position + followUp * CameraHeightOffGround - (opponent.transform.position - follow.position).normalized * CameraDistanceFromPlayer;
 //		transform.position = Vector3.Lerp(targetPosition + follow.position, Time.deltaTime * smooth);
 		transform.position = Vector3.Lerp (transform.position, targetPosition, Time.deltaTime * smooth);
-		transform.LookAt (follow);
+		transform.LookAt (opponent.transform);
 	}
 }
