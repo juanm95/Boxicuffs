@@ -81,18 +81,14 @@ public class Boxer : MonoBehaviour {
 			jumped = true;
 		}
 		if (transform.position.y < killDepth) {
-			resetMatch.winner = playerName;
-			SceneManager.LoadScene ("PlayerWins");
+            PlayerLoss();
 		}
         if (health <= 0 && zLocked)
         {
             gameObject.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             zLocked = false;
-            InvokeRepeating("RecoveryCountdown", knockdownTimer, 1.0f);
-            if(!zLocked)
-            {
-                //gameover
-            }
+            Invoke("RecoveryCountdown", knockdownTimer);
+          
             
         }
         
@@ -111,6 +107,10 @@ public class Boxer : MonoBehaviour {
             zLocked = true;
             Recovery();
         }
+        if (!zLocked)
+            {
+            PlayerLoss();
+            }
     }
 
 	void FixedUpdate() {
@@ -120,7 +120,8 @@ public class Boxer : MonoBehaviour {
 
     void PlayerLoss()
     {
-
+        resetMatch.winner = playerName;
+        SceneManager.LoadScene("PlayerWins");
     }
 
 	void OnCollisionEnter(Collision collision) {
@@ -145,11 +146,15 @@ public class Boxer : MonoBehaviour {
 			}
 			//			opponent.damage += 5;
 			rb.velocity = new Vector3 (0, 0, 0);
-            opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE;
+            opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE * 10000;
             if (opponent.health < 0) opponent.health = 0;
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
 			Debug.Log ("Hit that rope");
 			rb.AddForce (collision.relativeVelocity * 25);
+            if (rb.velocity.magnitude > 1)
+            {
+                hitboxRemaining = 0.5f;
+            }
 		}
 	}
 
