@@ -109,9 +109,18 @@ public class Boxer : MonoBehaviour {
             newRot[2] = 0;
             gameObject.transform.rotation = Quaternion.Slerp(currRot, newRot, 1);
             zLocked = true;
-            health = 50;
             Recovery();
         }
+    }
+
+	void FixedUpdate() {
+		rb.velocity = Vector3.ClampMagnitude (rb.velocity, 30f);
+	}
+
+
+    void PlayerLoss()
+    {
+
     }
 
 	void OnCollisionEnter(Collision collision) {
@@ -152,6 +161,10 @@ public class Boxer : MonoBehaviour {
     void Recovery()
     {
         health = startHealth - 25;
-        startHealth = health; 
+        startHealth = health;
+        if (health <= 0)
+        {
+            PlayerLoss();
+        }
     }
 }
