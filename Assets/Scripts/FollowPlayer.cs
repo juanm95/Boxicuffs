@@ -27,7 +27,14 @@ public class FollowPlayer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		follow = player.transform;
+        foreach (Transform child in gameObject.transform.parent.transform)
+        {
+            if (child.name == "BoxerBody")
+            {
+                player = child.gameObject;
+            }
+        }
+        follow = player.transform;
 		rb = player.GetComponent<Rigidbody> ();
 	}
 
