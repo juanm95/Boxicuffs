@@ -13,15 +13,15 @@ public class FollowPlayer : MonoBehaviour {
 	public float CameraDistanceFromPlayer;
 	public float smooth;
 
-	private AudioSource source;
+//	private AudioSource source;
 
-	public AudioClip backgroundMusic;
+//	public AudioClip backgroundMusic;
 
 	void Awake() {
 
-		source = GetComponent<AudioSource> ();
-		source.volume = 0.4F;
-		source.Play ();
+//		source = GetComponent<AudioSource> ();
+//		source.volume = 0.4F;
+//		source.Play ();
 
 	}
 
