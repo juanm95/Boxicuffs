@@ -26,6 +26,7 @@ public class Boxer : MonoBehaviour {
 	public AudioClip moveLSound;
 	public AudioClip moveRSound;
 	public AudioClip hitSound;
+	public AudioClip hardHitSound;
 
 	private AudioSource source;
 
@@ -94,8 +95,12 @@ public class Boxer : MonoBehaviour {
 //			Debug.Log (opponent.damage);
 			opponent.hitboxRemaining = 0;
 			collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
-			source.PlayOneShot (hitSound, 1F); // sound effect
-//			opponent.damage += 5;
+			if (collision.relativeVelocity.magnitude > 12) {
+				source.PlayOneShot (hardHitSound, 1F); // sound effect
+			} else {
+				source.PlayOneShot (hitSound, 1F); // sound effect
+			}
+			//			opponent.damage += 5;
 			rb.velocity = new Vector3 (0, 0, 0);
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
 			Debug.Log ("Hit that rope");
