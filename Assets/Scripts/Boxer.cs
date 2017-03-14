@@ -78,6 +78,10 @@ public class Boxer : MonoBehaviour {
 		}
 	}
 
+	void FixedUpdate() {
+		rb.velocity = Vector3.ClampMagnitude (rb.velocity, 30f);
+	}
+
 	void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.name == "PlayField") {
 			jumped = false;
