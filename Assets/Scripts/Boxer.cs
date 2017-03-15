@@ -147,7 +147,7 @@ public class Boxer : MonoBehaviour {
 			}
 			//			opponent.damage += 5;
 			rb.velocity = new Vector3 (0, 0, 0);
-            opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE * 10000;
+            opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE;
             if (opponent.health < 0) opponent.health = 0;
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
 			Debug.Log ("Hit that rope");
