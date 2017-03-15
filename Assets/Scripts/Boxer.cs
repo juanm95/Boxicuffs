@@ -124,6 +124,7 @@ public class Boxer : MonoBehaviour {
         SceneManager.LoadScene("PlayerWins");
     }
 
+
 	void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.name == "PlayField") {
 			jumped = false;
