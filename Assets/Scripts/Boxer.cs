@@ -32,6 +32,7 @@ public class Boxer : MonoBehaviour {
 	public AudioClip moveRSound;
 	public AudioClip hitSound;
 	public AudioClip hardHitSound;
+	private float healthLoss;
 
 	private AudioSource source;
 
@@ -48,10 +49,12 @@ public class Boxer : MonoBehaviour {
 		resetMatch = GameObject.Find ("SceneControl").GetComponent ("ResetMatch") as ResetMatch;
         health = 100;
         startHealth = health;
+		healthLoss = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		health -= healthLoss;
 		Debug.Log (rb.velocity);
 		hitboxRemaining -= Time.deltaTime;
 		if (Input.GetKeyDown(rightButton))
@@ -150,6 +153,13 @@ public class Boxer : MonoBehaviour {
             {
                 hitboxRemaining = 0.5f;
             }
+		}
+		if (collision.gameObject.name.StartsWith ("floor")) {
+			strength = 400;
+			healthLoss = .5f;
+		} else if (collision.gameObject.name.StartsWith ("RingBase")) {
+			strength = 200;
+			healthLoss = 0;
 		}
 	}
 
