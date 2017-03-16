@@ -23,7 +23,7 @@ public class Boxer : MonoBehaviour {
 	public float hitboxRemaining = 0;
     public float health;
     private float startHealth;
-    private float HEALTH_DROP_MAGNITUDE = 0.25f;
+    private float HEALTH_DROP_MAGNITUDE = 0.5f;
     private bool zLocked = true;
     private float knockdownTimer = 7.0f;
 //	public float damage = 1;
@@ -133,8 +133,9 @@ public class Boxer : MonoBehaviour {
 			opponent.hitboxRemaining = 0;
 			//collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
             opponent.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 2.0f, 1.0f);
-//			opponent.damage += 5;
-			collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
+            gameObject.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 0.5f, 0.025f);
+            //			opponent.damage += 5;
+            collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
 			if (collision.relativeVelocity.magnitude > 12) {
 				source.PlayOneShot (hardHitSound, 1F); // sound effect
 			} else {
