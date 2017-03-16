@@ -126,13 +126,8 @@ public class Boxer : MonoBehaviour {
 
 
 	void OnCollisionEnter(Collision collision) {
-		if (collision.gameObject.name == "PlayField") {
-			jumped = false;
-			timeSlow = false;
-		} else if (collision.gameObject.name == "JumpPad") {
-			jumped = false;
-			timeSlow = true;
-		} else if (collision.gameObject.name.StartsWith ("BoxerBody") && hitboxRemaining > 0) {
+		jumped = false;
+		if (collision.gameObject.name.StartsWith ("BoxerBody") && hitboxRemaining > 0) {
 			Boxer opponent = collision.gameObject.GetComponent<Boxer> ();
 //			Debug.Log (opponent.damage);
 			opponent.hitboxRemaining = 0;
@@ -150,7 +145,6 @@ public class Boxer : MonoBehaviour {
             opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE;
             if (opponent.health < 0) opponent.health = 0;
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
-			Debug.Log ("Hit that rope");
 			rb.AddForce (collision.relativeVelocity * 25);
             if (rb.velocity.magnitude > 1)
             {
