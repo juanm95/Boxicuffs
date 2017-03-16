@@ -124,7 +124,7 @@ public class Boxer : MonoBehaviour {
     void PlayerLoss()
     {
         resetMatch.winner = playerName;
-        SceneManager.LoadScene("PlayerWins");
+        SceneManager.LoadScene("BarScenePlayerWins");
     }
 
 
