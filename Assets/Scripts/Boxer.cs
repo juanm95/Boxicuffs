@@ -175,9 +175,9 @@ public class Boxer : MonoBehaviour {
 
     void Recovery()
     {
-        health = startHealth - 25;
+        health = startHealth - 75;
         startHealth = health;
-        if (health <= 0)
+        if (startHealth < 25)
         {
             PlayerLoss();
         }
