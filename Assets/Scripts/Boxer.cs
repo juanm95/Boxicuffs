@@ -55,6 +55,10 @@ public class Boxer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		health -= healthLoss;
+        if (health < 0)
+        {
+            health = 0;
+        }
 		Debug.Log (rb.velocity);
 		hitboxRemaining -= Time.deltaTime;
 		if (Input.GetKeyDown(rightButton))
@@ -156,7 +160,7 @@ public class Boxer : MonoBehaviour {
             }
 		}
 		if (collision.gameObject.name.StartsWith ("floor")) {
-			strength = 400;
+			strength = 500;
 			healthLoss = .5f;
 		} else if (collision.gameObject.name.StartsWith ("RingBase")) {
 			strength = 200;
@@ -171,9 +175,9 @@ public class Boxer : MonoBehaviour {
 
     void Recovery()
     {
-        health = startHealth - 25;
+        health = startHealth - 75;
         startHealth = health;
-        if (health <= 0)
+        if (startHealth < 25)
         {
             PlayerLoss();
         }
