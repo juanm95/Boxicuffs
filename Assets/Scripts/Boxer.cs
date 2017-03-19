@@ -34,12 +34,14 @@ public class Boxer : MonoBehaviour {
 	public AudioClip hardHitSound;
 	private float healthLoss;
 	public float lastSpeed;
+	private ParticleSystem hair;
 
 	private AudioSource source;
 
 	void Awake() {
 
 		source = GetComponent<AudioSource> ();
+		hair = GetComponentInChildren<ParticleSystem>();
 
 	}
 
@@ -138,6 +140,7 @@ public class Boxer : MonoBehaviour {
 			Debug.Log (playerName + ": " + collision.relativeVelocity);
 			Boxer opponent = collision.gameObject.GetComponent<Boxer> ();
 			if (lastSpeed > opponent.lastSpeed) { // If tie, no hit.
+				hair.Play();
 				Debug.Log(playerName + ": " + lastSpeed + ", " + opponent.playerName + ": " + opponent.lastSpeed);
 				opponent.hitboxRemaining = 0;
 				opponent.GetComponent<Rigidbody> ().AddExplosionForce (collision.impulse.magnitude * 8.0f, collision.transform.position, 10.0f, collision.impulse.magnitude * 300.0f);
