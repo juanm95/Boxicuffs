@@ -23,7 +23,7 @@ public class Boxer : MonoBehaviour {
 	public float hitboxRemaining = 0;
     public float health;
     private float startHealth;
-    private float HEALTH_DROP_MAGNITUDE = 0.25f;
+    private float HEALTH_DROP_MAGNITUDE = 1.0f;
     private bool zLocked = true;
     private float knockdownTimer = 7.0f;
 //	public float damage = 1;
@@ -32,6 +32,7 @@ public class Boxer : MonoBehaviour {
 	public AudioClip moveRSound;
 	public AudioClip hitSound;
 	public AudioClip hardHitSound;
+	private float healthLoss;
 
 	private AudioSource source;
 
@@ -48,10 +49,16 @@ public class Boxer : MonoBehaviour {
 		resetMatch = GameObject.Find ("SceneControl").GetComponent ("ResetMatch") as ResetMatch;
         health = 100;
         startHealth = health;
+		healthLoss = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		health -= healthLoss;
+        if (health < 0)
+        {
+            health = 0;
+        }
 		Debug.Log (rb.velocity);
 		hitboxRemaining -= Time.deltaTime;
 		if (Input.GetKeyDown(rightButton))
@@ -81,18 +88,14 @@ public class Boxer : MonoBehaviour {
 			jumped = true;
 		}
 		if (transform.position.y < killDepth) {
-			resetMatch.winner = playerName;
-			SceneManager.LoadScene ("PlayerWins");
+            PlayerLoss();
 		}
         if (health <= 0 && zLocked)
         {
             gameObject.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             zLocked = false;
-            InvokeRepeating("RecoveryCountdown", knockdownTimer, 1.0f);
-            if(!zLocked)
-            {
-                //gameover
-            }
+            Invoke("RecoveryCountdown", knockdownTimer);
+          
             
         }
         
@@ -109,29 +112,38 @@ public class Boxer : MonoBehaviour {
             newRot[2] = 0;
             gameObject.transform.rotation = Quaternion.Slerp(currRot, newRot, 1);
             zLocked = true;
-            health = 50;
             Recovery();
         }
+        if (!zLocked)
+            {
+            //PlayerLoss();
+            }
     }
+
 	void FixedUpdate() {
 		rb.velocity = Vector3.ClampMagnitude (rb.velocity, 30f);
 	}
 
+
+    void PlayerLoss()
+    {
+        resetMatch.winner = playerName;
+        SceneManager.LoadScene("BarScenePlayerWins");
+    }
+
+
 	void OnCollisionEnter(Collision collision) {
-		if (collision.gameObject.name == "PlayField") {
-			jumped = false;
-			timeSlow = false;
-		} else if (collision.gameObject.name == "JumpPad") {
-			jumped = false;
-			timeSlow = true;
-		} else if (collision.gameObject.name.StartsWith ("BoxerBody") && hitboxRemaining > 0) {
+		jumped = false;
+		if (collision.gameObject.name.StartsWith ("BoxerBody") && hitboxRemaining > 0) {
 			Boxer opponent = collision.gameObject.GetComponent<Boxer> ();
 //			Debug.Log (opponent.damage);
 			opponent.hitboxRemaining = 0;
 			//collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
-            opponent.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 2.0f, 1.0f);
-//			opponent.damage += 5;
-			collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
+            opponent.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.magnitude * 8.0f, collision.transform.position, 10.0f, collision.impulse.magnitude *  300.0f);
+            gameObject.transform.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 10.0f, collision.impulse.magnitude);
+            //gameObject.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 0.5f, 0.025f);
+            //			opponent.damage += 5;
+            //collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
 			if (collision.relativeVelocity.magnitude > 12) {
 				source.PlayOneShot (hardHitSound, 1F); // sound effect
 			} else {
@@ -142,8 +154,18 @@ public class Boxer : MonoBehaviour {
             opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE;
             if (opponent.health < 0) opponent.health = 0;
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
-			Debug.Log ("Hit that rope");
 			rb.AddForce (collision.relativeVelocity * 25);
+            if (rb.velocity.magnitude > 1)
+            {
+                hitboxRemaining = 0.5f;
+            }
+		}
+		if (collision.gameObject.name.StartsWith ("floor")) {
+			strength = 450;
+			healthLoss = .15f;
+		} else if (collision.gameObject.name.StartsWith ("RingBase")) {
+			strength = 200;
+			healthLoss = 0;
 		}
 	}
 
@@ -154,7 +176,11 @@ public class Boxer : MonoBehaviour {
 
     void Recovery()
     {
-        health = startHealth - 25;
-        startHealth = health; 
+        health = startHealth - 75;
+        startHealth = health;
+        if (startHealth < 25)
+        {
+            PlayerLoss();
+        }
     }
 }
