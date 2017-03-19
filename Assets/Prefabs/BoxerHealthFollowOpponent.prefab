@@ -950,7 +950,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 2ccc4bc2128664623b3e612ae7d56f4e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -1221,6 +1221,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthScale: 0
   boxerScript: {fileID: 0}
+  moustache: {fileID: 0}
+  origMoustacheScale: {x: 0, y: 0, z: 0}
 --- !u!114 &114689417797565620
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1238,7 +1240,6 @@ MonoBehaviour:
   CameraHeightOffGround: 3
   CameraDistanceFromPlayer: 4
   smooth: 100
-  backgroundMusic: {fileID: 0}
 --- !u!124 &124041289271422342
 Behaviour:
   m_ObjectHideFlags: 1

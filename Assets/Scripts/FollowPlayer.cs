@@ -40,10 +40,6 @@ public class FollowPlayer : MonoBehaviour {
 
 	// Gauranteed to run after all objects are processed. This ensures that we capture any player movement.
 	void LateUpdate () {
-		if ((player.GetComponent ("Boxer") as Boxer).jumped) {
-			CameraDistanceFromPlayer = 6.0f;
-			CameraHeightOffGround = 6.0f;
-		}
 		Vector3 followUp = new Vector3 (follow.up.x, Mathf.Abs(follow.up.y), follow.up.z);
 //		Vector3 targetPosition = - CameraDistanceFromPlayer * rb.velocity.normalized;
 //		targetPosition.y = CameraHeightOffGround;
