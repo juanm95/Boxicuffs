@@ -23,7 +23,7 @@ public class Boxer : MonoBehaviour {
 	public float hitboxRemaining = 0;
     public float health;
     private float startHealth;
-    private float HEALTH_DROP_MAGNITUDE = 0.5f;
+    private float HEALTH_DROP_MAGNITUDE = 1.0f;
     private bool zLocked = true;
     private float knockdownTimer = 7.0f;
 //	public float damage = 1;
@@ -116,7 +116,7 @@ public class Boxer : MonoBehaviour {
         }
         if (!zLocked)
             {
-            PlayerLoss();
+            //PlayerLoss();
             }
     }
 
@@ -139,10 +139,11 @@ public class Boxer : MonoBehaviour {
 //			Debug.Log (opponent.damage);
 			opponent.hitboxRemaining = 0;
 			//collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
-            opponent.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 2.0f, 1.0f);
-            gameObject.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 0.5f, 0.025f);
+            opponent.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.magnitude * 8.0f, collision.transform.position, 10.0f, collision.impulse.magnitude *  300.0f);
+            gameObject.transform.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 10.0f, collision.impulse.magnitude);
+            //gameObject.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 0.5f, 0.025f);
             //			opponent.damage += 5;
-            collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
+            //collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
 			if (collision.relativeVelocity.magnitude > 12) {
 				source.PlayOneShot (hardHitSound, 1F); // sound effect
 			} else {
@@ -160,8 +161,8 @@ public class Boxer : MonoBehaviour {
             }
 		}
 		if (collision.gameObject.name.StartsWith ("floor")) {
-			strength = 500;
-			healthLoss = .5f;
+			strength = 450;
+			healthLoss = .15f;
 		} else if (collision.gameObject.name.StartsWith ("RingBase")) {
 			strength = 200;
 			healthLoss = 0;
