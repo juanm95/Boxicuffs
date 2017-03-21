@@ -25,7 +25,7 @@ public class Boxer : MonoBehaviour {
     public float health;
 
     private float startHealth;
-    private float HEALTH_DROP_MAGNITUDE = 5.0f;
+    private float HEALTH_DROP_MAGNITUDE = 0.5f;
     private bool zLocked = true;
     private float knockdownTimer = 7.0f;
     private bool onGround;
@@ -210,7 +210,7 @@ public class Boxer : MonoBehaviour {
 
     void Recovery()
     {
-        health = startHealth - 25;
+        health = startHealth - 33;
         startHealth = health;
         if (health < 0)
         {
