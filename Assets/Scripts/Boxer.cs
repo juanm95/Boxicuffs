@@ -123,7 +123,7 @@ public class Boxer : MonoBehaviour {
         Debug.Log(zLocked);
         Debug.Log(detectIfUpright());
         Debug.Log(countdownTime);
-        if (onGround && !zLocked && detectIfUpright() && countdownTime <= 2.0f)
+        if (onGround && !zLocked && detectIfUpright() && countdownTime <= 6.0f)
         {
             Debug.Log("Has recovered");
             gameObject.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -205,7 +205,7 @@ public class Boxer : MonoBehaviour {
 
     bool detectIfUpright()
     {
-        return transform.up.y > 0.6;
+        return transform.up.y > 0.8;
     }
 
     void Recovery()
