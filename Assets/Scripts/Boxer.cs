@@ -187,7 +187,7 @@ public class Boxer : MonoBehaviour {
 					opponent.health = 0;
 			}
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
-			rb.AddForce (collision.relativeVelocity * 25);
+			rb.AddForce (collision.relativeVelocity * 10);
             if (rb.velocity.magnitude > 1)
             {
                 hitboxRemaining = 0.5f;
