@@ -39,12 +39,15 @@ public class Boxer : MonoBehaviour {
 	public AudioClip hitSound;
 	public AudioClip hardHitSound;
 	private float healthLoss;
+	public float lastSpeed;
+	private ParticleSystem hair;
 
 	private AudioSource source;
 
 	void Awake() {
 
 		source = GetComponent<AudioSource> ();
+		hair = GetComponentInChildren<ParticleSystem>();
 
 	}
 
@@ -105,9 +108,8 @@ public class Boxer : MonoBehaviour {
             if (zLocked) Dizzy();
             RecoveryCountdown();
         }
-
-    }
-
+		lastSpeed = rb.velocity.magnitude;
+	}
     void Dizzy()
     {
         gameObject.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
@@ -115,7 +117,6 @@ public class Boxer : MonoBehaviour {
         healthBar.SetActive(false);
         countdownTimerGameObj.SetActive(true);
     }
-
     void RecoveryCountdown()
     {
         float countdownTime = countdownScript.currTime;
@@ -167,24 +168,24 @@ public class Boxer : MonoBehaviour {
     void OnCollisionEnter(Collision collision) {
 		jumped = false;
 		if (collision.gameObject.name.StartsWith ("BoxerBody") && hitboxRemaining > 0) {
+			Debug.Log (playerName + ": " + collision.relativeVelocity);
 			Boxer opponent = collision.gameObject.GetComponent<Boxer> ();
-//			Debug.Log (opponent.damage);
-			opponent.hitboxRemaining = 0;
-			//collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
-            opponent.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.magnitude * 8.0f, collision.transform.position, 10.0f, collision.impulse.magnitude *  300.0f);
-            gameObject.transform.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 10.0f, collision.impulse.magnitude);
-            //gameObject.GetComponent<Rigidbody>().AddExplosionForce(80.0f, collision.transform.position, 0.5f, 0.025f);
-            //			opponent.damage += 5;
-            //collision.rigidbody.AddForce (-collision.relativeVelocity * 10);
-			if (collision.relativeVelocity.magnitude > 12) {
-				source.PlayOneShot (hardHitSound, 1F); // sound effect
-			} else {
-				source.PlayOneShot (hitSound, 1F); // sound effect
+			if (lastSpeed > opponent.lastSpeed) { // If tie, no hit.
+				hair.Play();
+				Debug.Log(playerName + ": " + lastSpeed + ", " + opponent.playerName + ": " + opponent.lastSpeed);
+				opponent.hitboxRemaining = 0;
+				opponent.GetComponent<Rigidbody> ().AddExplosionForce (collision.impulse.magnitude * 8.0f, collision.transform.position, 10.0f, collision.impulse.magnitude * 300.0f);
+				gameObject.transform.GetComponent<Rigidbody> ().AddExplosionForce (80.0f, collision.transform.position, 10.0f, collision.impulse.magnitude);
+				if (collision.relativeVelocity.magnitude > 12) {
+					source.PlayOneShot (hardHitSound, 1F); // sound effect
+				} else {
+					source.PlayOneShot (hitSound, 1F); // sound effect
+				}
+				rb.velocity = new Vector3 (0, 0, 0);
+				opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE;
+				if (opponent.health < 0)
+					opponent.health = 0;
 			}
-			//			opponent.damage += 5;
-			rb.velocity = new Vector3 (0, 0, 0);
-            opponent.health = opponent.health - collision.relativeVelocity.magnitude * HEALTH_DROP_MAGNITUDE;
-            if (opponent.health < 0) opponent.health = 0;
 		} else if (collision.gameObject.name.StartsWith ("Rope")) {
 			rb.AddForce (collision.relativeVelocity * 25);
             if (rb.velocity.magnitude > 1)
