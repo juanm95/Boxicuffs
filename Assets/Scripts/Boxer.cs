@@ -25,7 +25,7 @@ public class Boxer : MonoBehaviour {
     public float health;
 
     private float startHealth;
-    private float HEALTH_DROP_MAGNITUDE = 30.0f;
+    private float HEALTH_DROP_MAGNITUDE = 5.0f;
     private bool zLocked = true;
     private float knockdownTimer = 7.0f;
     private bool onGround;
@@ -123,7 +123,7 @@ public class Boxer : MonoBehaviour {
         Debug.Log(zLocked);
         Debug.Log(detectIfUpright());
         Debug.Log(countdownTime);
-        if (onGround && !zLocked && detectIfUpright() && countdownTime <= 6.0f)
+        if (onGround && !zLocked && detectIfUpright() && countdownTime <= 4.0f && gameObject.GetComponent<Rigidbody>().velocity.magnitude < 5.0f)
         {
             Debug.Log("Has recovered");
             gameObject.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -210,7 +210,7 @@ public class Boxer : MonoBehaviour {
 
     void Recovery()
     {
-        health = startHealth - 50;
+        health = startHealth - 25;
         startHealth = health;
         if (health < 0)
         {
