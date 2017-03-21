@@ -9,7 +9,7 @@ public class LaunchGame : MonoBehaviour {
     public string sceneName;
 	// Use this for initialization
 	void Start () {
-        gameObject.GetComponent<Button>().onClick.AddListener(LoadLevel);//
+        gameObject.GetComponent<Button>().onClick.AddListener(LoadLevel);
     }
 
     void LoadLevel()
